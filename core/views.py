@@ -91,6 +91,43 @@ class ClientNotificationListView(generics.ListAPIView):
 		client_id = self.kwargs.get('client_id')
 		return ClientNotification.objects.filter(client_id=client_id)
 
+
+class ClientNotificationDetailView(generics.UpdateAPIView):
+	queryset = ClientNotification.objects.all()
+	serializer_class = ClientNotificationSerializer
+	lookup_url_kwarg = 'pk'
+	
+	def put(self, request, *args, **kwargs):
+		instance = self.get_object()
+		is_approved = request.data.get('is_approved')
+		is_declined = request.data.get('is_declined')
+		"""print(request.data)
+		print("Is Approved:", is_approved)
+		print("Is Declined:", is_declined)
+"""
+		if is_approved == 'true':
+			instance.is_approved = True
+			instance.is_declined = False 
+			instance.save()
+
+			TutorNotification.objects.create(client_id=instance.client_id, tutor_id=instance.tutor_id, message=f"{instance.tutor.user.full_name}'s has approved your request.")
+			OngoingJob.objects.create(client_id=instance.client_id, tutor_id=instance.tutor_id,start_date='02-04-2021')
+			instance.delete() 
+			return Response({'message': 'You have approved the request'}, status=status.HTTP_200_OK)
+		
+		elif is_declined == 'true':
+			instance.is_declined = True
+			instance.is_approved = False 
+			instance.save()
+		
+			TutorNotification.objects.create(client_id=instance.client_id, tutor_id=instance.tutor_id, message=f"{instance.tutor.user.full_name}'s has declined your request.")
+			instance.delete() 
+			return Response({'message': 'You have declined the request'}, status=status.HTTP_200_OK)
+		
+		else:
+			return Response({'error': 'Invalid value for approval or decline status'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class TutorNotificationDetailView(generics.UpdateAPIView):
 	queryset = TutorNotification.objects.all()
 	serializer_class = TutorNotificationDSerializer

@@ -170,7 +170,7 @@ class ProfileAPIView(ListAPIView):
 
     def get(self, request, id):
         try:
-            user = Tutor.objects.get(id = id)
+            user = Tutor.objects.get(user_id = id)
             serializer = TutorSerializer(user)
             user2 = CustomUser.objects.get(id = id)
             serializer2 = CustomUserSerializer(user2)

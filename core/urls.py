@@ -11,9 +11,10 @@ urlpatterns = [
     path('api/tutor/<int:tutor_id>/<int:client_id>/booking/', TutorBookingCreateView.as_view(), name='book-tutor'),
     path('api/tutor/dashboard/<int:tutor_id>/tutor-notifications/', TutorNotificationListView.as_view(), name='notification-list'),
     path('api/tutor/dashboard/<int:tutor_id>/tutor-notifications/<int:pk>/', TutorNotificationDetailView.as_view(), name='notification-detail'),
+    path('api/client/dashboard/<int:client_id>/client-notifications/<int:pk>/', ClientNotificationDetailView.as_view(), name='notification-detail'),
     path('api/send-tutor-request/', TutorRequestCreateView.as_view(), name='send-tutor-request'),
     path('api/ongoing-jobs/<int:id>/', OngoingJobListView.as_view(), name='ongoing-job-list'),
     path('api/completed-jobs/<int:id>/', CompletedJobListView.as_view(), name='completed-job-list'),
     path('api/ongoing-jobs/<int:pk>/complete/', OngoingJobCompleteView.as_view(), name='ongoing-job-complete'),
-    path('api/tracker/<int:id>/', TrackerApiView.as_view(), name='ongoing-job-complete'),
+    path('api/tracker/<int:id>/', TrackerApiView.as_view(), name='tracker'),
 ]  
